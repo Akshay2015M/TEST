@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="js/jquery-2.1.3.js" type="text/javascript"></script>
+    <script src="Scripts/jquery-1.4.1-vsdoc.js" type="text/javascript"></script>
+    <script src="js/jquery-1.11.2.min.js" type="text/javascript"></script>
+    <script  language="javascript" type="text/javascript">
+//////        function testJson() {
+//////            alert("testJson");
+//////            var msg = "test"
+//////            $.ajax({
+//////                type: "POST",
+//////                url: "http://192.168.7.119/TestJSON/",
+//////                data: "{}",
+//////                contentType: "application/json; charset=utf-8",
+//////                dataType: "json",
+//////                success: function (msg) {
+//////                    $("#jsonResponse").html(msg);
+//////                    var data = eval("(" + msg + ")");
+//////                    var t = "<table border=1> <tr>" +
+//////                      "<td> <strong>Name</strong></td> <td> " +
+//////                      "<strong>Company</strong></td> <td> " +
+//////                      "<strong>Address</strong></td> <td> " +
+//////                      "<strong>Phone</strong></td> <td> " +
+//////                      "<strong>Country</strong></td> </tr> ";
+//////                    jQuery.each(data, function (rec) {
+//////                        t = t + " <tr> <td> " + this.Name + "</td> <td> " +
+//////                            this.Company + "</td> <td> " + this.Address +
+//////                             "</td> <td> " + this.Phone + "</td> <td> " + this.Country + "</td> </tr> ";
+//////                    });
+
+//////                    t = t + " </table> ";
+//////                    $("#jsonDiv").html(t);
+//////                },
+//////                error: function (msg) {
+//////                    alert("Failed..")
+//////                }
+
+//////            });
+        //////        };
+        var intVal = 0;
+        function subAjax() {
+            intVal++;
+            callAjaxEx("http://192.168.7.119/MyTestApp/Default.aspx?DT=GETRES&v="+intVal+"", 'subReturn');
+        }
+        function callAjaxEx(strURL, strCallBack) {
+            var strReturn = "";
+            
+            try {
+                var XMLHttpRequestObject;
+                if (window.XMLHttpRequest) {
+                    XMLHttpRequestObject = new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) {
+                    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                if (XMLHttpRequestObject) {
+                    XMLHttpRequestObject.open("GET", strURL, true);
+                    XMLHttpRequestObject.onreadystatechange = function () {
+                        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                            try {
+                                strReturn = XMLHttpRequestObject.responseText;
+                                if (strCallBack.toString().length > 0)
+                                    eval(strCallBack + "(\"" + strReturn + "\");");
+                            }
+                            catch (e) {
+                                alert(e);
+                            }
+                            return;
+                        }
+                    }
+                }
+                XMLHttpRequestObject.send(null);
+            }
+            catch (e) {
+                alert(e.message + ";" + e.toString());
+            }
+            //return strReturn;
+        }
+
+        function subReturn(ret) {
+            var StrRet = ret;
+			document.getElementById("msg").innerHTML=StrRet;
+        }
+        </script>
+    
+
+
+</head>
+<body>
+     <p>
+        <input id="testjson" type="button" value="Test JSON Call" onclick="subAjax()" />
+    </p>
+    <br />
+    <div id="msg">Message Response</div>
+    <br />
+    <div id="jsonResponse" style="display:block;"></div>
+    <br />
+    <strong>Processed Result</strong>
+    <br />
+    <div id="jsonDiv" style="display:block;"></div>
+    </body>
+</html>
